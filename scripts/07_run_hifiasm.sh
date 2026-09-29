@@ -19,4 +19,4 @@ apptainer exec --bind $INPUTDIR --bind $OUTPUTDIR /containers/apptainer/hifiasm_
 hifiasm  -o ${OUTPUTDIR}/ERR11437349.asm -t 16  ${INPUTDIR}/ERR11437349.fastq.gz
 
 #convert the output format
-awk '/^S/{print ">"$2;print $3}' "${OUTPUTDIR}/ERR11437349.asm.bp.p_ctg.gfa" > "${OUTPUTDIR}/ERR11437349.asm.bp.p_ctg.fa"
+awk '/^S/{print ">"$2;print $3}' "${OUTPUTDIR}/ERR11437349.asm.bp.p_ctg.gfa" > "${OUTPUTDIR}/assembly.fasta"
