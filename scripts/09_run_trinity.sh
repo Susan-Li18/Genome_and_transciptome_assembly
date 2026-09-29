@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-#SBATCH --time=03:00:00
+#SBATCH --time=12:00:00
 #SBATCH --mem=64G
 #SBATCH --cpus-per-task=16
 #SBATCH --job-name=run_trinity
