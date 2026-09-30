@@ -21,9 +21,20 @@ mkdir -p $OUTPUTDIR
 # set environment variable
 export MERQURY="/usr/local/share/merqury"
 
-# prepare meryl dbs (use recommend k=31)
+# find the best k
+best_k_output=$(apptainer exec --bind $INPUTDIR --bind $OUTPUTDIR --bind $RAWDATA /containers/apptainer/merqury_1.3.sif \
+bash $MERQURY/best_k.sh  158360844 0.001) || exit 1
+k=$(printf '%s\n' "$best_k_output" | awk '
+  END {
+    if ($1 !~ /^[0-9]+([.][0-9]+)?$/ || $1 <= 0) exit 1
+    print int($1) + ($1 > int($1))
+  }
+') || exit 1
+
+
+# prepare meryl dbs 
 apptainer exec --bind $INPUTDIR --bind $OUTPUTDIR --bind $RAWDATA /containers/apptainer/merqury_1.3.sif \
-meryl k=31 count \
+meryl k=$k count \
       threads=16 \
       output $OUTPUTDIR/Geg14_HiFi.meryl \
       $RAWDATA/*.fastq.gz || exit 1
@@ -58,3 +69,13 @@ bash $MERQURY/merqury.sh \
      $OUTPUTDIR/Geg14_HiFi.meryl \
      $INPUTDIR/LJA/assembly.fasta \
      LJA_merqury
+
+#create the LJA_di output folder
+mkdir -p "$OUTPUTDIR/LJA_di"
+cd "$OUTPUTDIR/LJA_di" || exit 1
+# run merqury for hifiasm
+apptainer exec --bind $INPUTDIR --bind $OUTPUTDIR --bind $RAWDATA /containers/apptainer/merqury_1.3.sif \
+bash $MERQURY/merqury.sh \
+     $OUTPUTDIR/Geg14_HiFi.meryl \
+     $INPUTDIR/LJA/assembly.fasta \
+     LJA_di_merqury
