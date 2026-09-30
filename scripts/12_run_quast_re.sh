@@ -20,11 +20,11 @@ mkdir -p $OUTPUTDIR
 # run quast
 
 apptainer exec --bind $INPUTDIR --bind $OUTPUTDIR --bind $REFERDIR /containers/apptainer/quast_5.2.0.sif \
-quast.py $INPUTDIR/flye/assembly.fasta $INPUTDIR/hifiasm/assembly.fasta $INPUTDIR/LJA/assembly.fasta \
+quast.py $INPUTDIR/flye/assembly.fasta $INPUTDIR/hifiasm/assembly.fasta $INPUTDIR/LJA/assembly.fasta $INPUTDIR/LJA_di/assembly.fasta \
 -r $REFERDIR/*.fa.gz \
--g $REFERDIR/*.gff \
+-g $REFERDIR/*.gff3 \
 -o $OUTPUTDIR \
 -t 10 \
 -e \
 --large \
---labels "flye,hifiasm,LJA"
+--labels "flye,hifiasm,LJA,LJA_di"
