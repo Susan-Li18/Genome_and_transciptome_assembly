@@ -20,7 +20,7 @@ mkdir -p $OUTPUTDIR
 # run busco
 
 apptainer exec --bind $INPUTDIR --bind $OUTPUTDIR /containers/apptainer/busco_5.7.1.sif \
-busco -i $INPUTDIR/$1/trinity.Trinity.fasta \
+busco -i $INPUTDIR/trinity.Trinity.fasta \
       --out_path $OUTPUTDIR \
       -o $1 \
       -m transcriptome \
