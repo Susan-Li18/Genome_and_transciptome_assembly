@@ -63,7 +63,7 @@ bash $MERQURY/merqury.sh \
 #create the LJA output folder
 mkdir -p "$OUTPUTDIR/LJA"
 cd "$OUTPUTDIR/LJA" || exit 1
-# run merqury for hifiasm
+# run merqury for LJA
 apptainer exec --bind $INPUTDIR --bind $OUTPUTDIR --bind $RAWDATA /containers/apptainer/merqury_1.3.sif \
 bash $MERQURY/merqury.sh \
      $OUTPUTDIR/Geg14_HiFi.meryl \
@@ -73,9 +73,9 @@ bash $MERQURY/merqury.sh \
 #create the LJA_di output folder
 mkdir -p "$OUTPUTDIR/LJA_di"
 cd "$OUTPUTDIR/LJA_di" || exit 1
-# run merqury for hifiasm
+# run merqury for LJA_di
 apptainer exec --bind $INPUTDIR --bind $OUTPUTDIR --bind $RAWDATA /containers/apptainer/merqury_1.3.sif \
 bash $MERQURY/merqury.sh \
      $OUTPUTDIR/Geg14_HiFi.meryl \
-     $INPUTDIR/LJA/assembly.fasta \
+     $INPUTDIR/LJA_di/assembly.fasta \
      LJA_di_merqury
