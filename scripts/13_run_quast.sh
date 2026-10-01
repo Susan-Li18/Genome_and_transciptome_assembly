@@ -25,4 +25,5 @@ quast.py $INPUTDIR/flye/assembly.fasta $INPUTDIR/hifiasm/assembly.fasta $INPUTDI
 -t 10 \
 -e \
 --large \
+--est-ref-size 158360844 \
 --labels "flye,hifiasm,LJA,LJA_di"
