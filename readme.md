@@ -94,6 +94,7 @@ assembly_annotation_course/
 │   ├── 16_run_mummerplot.sh          # Plot reference-versus-assembly alignments
 │   ├── 17_run_nucmer_sample.sh       # Align genome assemblies to each other
 │   ├── 18_run_mummerplot_sample.sh   # Plot pairwise assembly alignments
+│   ├── 19_busco_plot.sh              # Plot collected BUSCO summaries
 │   └── busco_downloads/              # Cached BUSCO datasets and version index
 ├── result/
 │   ├── fastqc/                       # Collected FastQC HTML reports
@@ -295,7 +296,7 @@ sbatch ./scripts/10_run_busco_genome.sh LJA_di
 
 <small><strong>Parameters:</strong></small> `-m genome -l brassicales_odb10 -c 16`.
 
-<small><strong>Output:</strong></small> `assembly_evaluation/busco/<assembler_name>/`, including text/JSON short summaries and `run_brassicales_odb10/full_table.tsv`. Review complete single-copy, complete duplicated, fragmented, and missing BUSCOs. Results for all three genome assemblers are present in the workspace.
+<small><strong>Output:</strong></small> `assembly_evaluation/busco/<assembler_name>/`, including text/JSON short summaries.
 
 **Step 11: Transcriptome completeness evaluation with BUSCO**
 
@@ -323,7 +324,7 @@ Evaluates Flye, hifiasm, LJA, and LJA_di together against the Arabidopsis_thalia
 
 <small><strong>Parameters:</strong></small> `-t 10 -e --large --labels "flye,hifiasm,LJA,LJA_di"`.
 
-<small><strong>Output:</strong></small> `assembly_evaluation/quast/with_reference/`, including `report.html`, `report.tsv`, `report.txt`, `report.pdf`, `icarus.html`, and `quast.log`. Review assembly size, contiguity, reference coverage, and misassembly statistics. Reports are already present in this directory.
+<small><strong>Output:</strong></small> `assembly_evaluation/quast/with_reference/`, including `report.html`, `report.tsv`, `report.txt`, `report.pdf`, `icarus.html`, and `quast.log`. Review assembly size, contiguity, reference coverage, and misassembly statistics.
 
 **Step 13: QUAST evaluation without a reference**
 
@@ -331,7 +332,7 @@ Evaluates Flye, hifiasm, LJA, and LJA_di together against the Arabidopsis_thalia
 
 <small><strong>Parameters:</strong></small> `-t 10 -e --large --est-ref-size 158360844`, with the same four assembly labels.
 
-<small><strong>Output:</strong></small> reports under `assembly_evaluation/quast/without_reference/`, including `report.html`, `report.tsv`, and `report.txt`. Use these reports for reference-independent contiguity and length statistics. The output directory exists in the workspace, but the report files listed above are not currently present.
+<small><strong>Output:</strong></small> reports under `assembly_evaluation/quast/without_reference/`, including `report.html`, `report.tsv`, and `report.txt`. Use these reports for reference-independent contiguity and length statistics. Reports are already present in this directory. Collected HTML reports for both QUAST runs are also present under `result/assembly_evaluation/quast/`.
 
 **Step 14: k-mer-based assembly evaluation with Merqury**
 
@@ -354,12 +355,14 @@ assembly_evaluation/merqury/
 └── LJA_di/     # Prefix: LJA_di_merqury
 ```
 
-Each run produces QV files (`*.qv`), k-mer completeness statistics (`*.completeness.stats`), and spectra plots (`*.spectra-asm.*.png`, `*.assembly.spectra-cn.*.png`). These output directories and files are present.
+Each run produces QV files (`*.qv`), k-mer completeness statistics (`*.completeness.stats`), and spectra plots (`*.spectra-asm.*.png`, `*.assembly.spectra-cn.*.png`). 
 
 
 #### **Genome Assembly Comparison — Scripts 15–18**
 
 The existing comparison scripts include Flye, hifiasm, and LJA. 
+
+LJA and LJA_di were both evaluated with QUAST, BUSCO, and Merqury. Their BUSCO counts are identical (4,590 complete, 5 fragmented, and 1 missing), and their Merqury results are effectively the same. Standard LJA has slightly better QUAST contiguity (N50: 11.21 versus 10.63 Mb; N90: 2.42 versus 2.25 Mb) and fewer reference-defined misassemblies (784 versus 836), while LJA_di has only marginally higher TAIR10 coverage (89.212% versus 89.192%). Standard LJA was therefore selected as the representative LJA assembly for the NUCmer and dot-plot comparisons. 
 
 **Step 15: Align genome assemblies to TAIR10 with NUCmer**
 
@@ -436,6 +439,23 @@ comparing/
 ```
 
 Use the dot plots to inspect assembly correspondence and structural differences. 
+
+#### **BUSCO Result Plotting — Script 19**
+
+**Step 19: Plot collected BUSCO summaries**
+
+<small><strong>Script:</strong></small> `scripts/19_busco_plot.sh`
+
+Runs BUSCO's `generate_plot.py` on the collected summaries under `result/assembly_evaluation/busco/`:
+
+```bash
+sbatch ./scripts/19_busco_plot.sh geno
+sbatch ./scripts/19_busco_plot.sh trinity
+```
+
+<small><strong>Input:</strong></small> `geno/` currently contains summaries for Flye, hifiasm, and LJA; the LJA diploid-mode summary has not been collected into this directory. `trinity/` contains the Trinity summary.
+
+<small><strong>Output:</strong></small> `busco_figure.png` and `busco_figure.R` in each input directory. 
 
 #### **Contact**
 
